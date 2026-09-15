@@ -1,0 +1,653 @@
+<!doctype html>
+<html lang="en" id="htmlRoot">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>JustPICK — We pick. You enjoy.</title>
+<meta name="description" content="JustPICK is the app that picks dinner for you. One tap, one answer, argument over. Join the beta." />
+
+<meta property="og:title" content="JustPICK — We pick. You enjoy." />
+<meta property="og:description" content="Nobody in your house has to decide what's for dinner again." />
+<meta property="og:image" content="assets/icon.png" />
+<meta property="og:type" content="website" />
+
+<link rel="icon" href="assets/favicon.png" />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Noto+Sans+TC:wght@400;500;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --bg: #0d0d0f;
+    --bg-raised: #17171b;
+    --bg-raised-2: #1e1e23;
+    --line: #2a2a30;
+    --pink: #ff2e88;
+    --lime: #d7f205;
+    --cyan: #00e5ff;
+    --ink: #f5f5f7;
+    --muted: #9a9aa4;
+    --radius-lg: 28px;
+  }
+
+  *{ box-sizing: border-box; }
+  html{ scroll-behavior: smooth; }
+  body{
+    margin:0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Inter', 'Noto Sans TC', -apple-system, sans-serif;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+  html[lang="zh-Hant"] body{ font-family: 'Noto Sans TC', 'Inter', -apple-system, sans-serif; }
+  img{ max-width:100%; display:block; }
+  a{ color:inherit; }
+
+  h1, h2, h3, .display{
+    font-family: 'Bricolage Grotesque', 'Inter', sans-serif;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    line-height: 1.05;
+    margin: 0;
+  }
+  html[lang="zh-Hant"] h1, html[lang="zh-Hant"] h2, html[lang="zh-Hant"] h3{
+    font-family: 'Noto Sans TC', 'Bricolage Grotesque', sans-serif;
+    letter-spacing: 0;
+  }
+
+  .wrap{ max-width: 1180px; margin: 0 auto; padding: 0 28px; }
+
+  a:focus-visible, button:focus-visible{
+    outline: 2px solid var(--cyan);
+    outline-offset: 3px;
+    border-radius: 6px;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+  }
+
+  /* ---------- NAV ---------- */
+  header.site{
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(13,13,15,0.82);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--line);
+  }
+  .nav{
+    display:flex; align-items:center; justify-content: space-between;
+    padding: 14px 28px; max-width: 1180px; margin: 0 auto; gap: 18px;
+  }
+  .nav .logo img{ height: 28px; width:auto; }
+  .nav-links{
+    display:flex; gap: 32px; list-style:none; margin:0; padding:0;
+    font-size: 15px; font-weight: 500; color: var(--muted);
+  }
+  .nav-links a{ text-decoration:none; transition: color .15s; white-space:nowrap; }
+  .nav-links a:hover{ color: var(--ink); }
+  .nav-right{ display:flex; align-items:center; gap: 14px; }
+  .lang-toggle{
+    background: var(--bg-raised);
+    border: 1px solid var(--line);
+    color: var(--ink);
+    font-weight: 700;
+    font-size: 13px;
+    padding: 9px 14px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: border-color .15s;
+  }
+  .lang-toggle:hover{ border-color: var(--lime); }
+  .nav-cta{
+    display:inline-flex; align-items:center; gap:8px;
+    background: var(--pink); color:#fff; font-weight: 700; font-size: 14px;
+    padding: 11px 20px; border-radius: 999px; text-decoration:none;
+    box-shadow: 0 0 0 0 rgba(255,46,136,0.5);
+    transition: transform .15s ease, box-shadow .2s ease;
+    white-space:nowrap;
+  }
+  .nav-cta:hover{ transform: translateY(-1px); box-shadow: 0 6px 24px rgba(255,46,136,0.35); }
+  .nav-toggle{ display:none; }
+
+  @media (max-width: 760px){
+    .nav-links{ display:none; }
+    .nav-toggle{
+      display:block; background:none; border:1px solid var(--line);
+      color: var(--ink); border-radius: 10px; padding: 8px 10px; font-size: 14px;
+    }
+  }
+
+  /* ---------- HERO ---------- */
+  .hero{ padding: 76px 0 60px; position: relative; overflow: hidden; }
+  .hero-grid{ display:grid; grid-template-columns: 1.05fr 0.95fr; gap: 48px; align-items:center; }
+  .eyebrow-tag{
+    display:inline-flex; align-items:center; gap:8px;
+    background: var(--bg-raised); border: 1px solid var(--line); color: var(--lime);
+    font-size: 13px; font-weight: 600; padding: 7px 14px 7px 10px; border-radius: 999px; margin-bottom: 22px;
+  }
+  .eyebrow-tag .dot{ width:7px; height:7px; border-radius:50%; background: var(--lime); box-shadow: 0 0 10px var(--lime); }
+  .hero h1{ font-size: clamp(2.4rem, 4.6vw, 3.6rem); color: var(--ink); }
+  .hero h1 span{ color: var(--pink); }
+  .hero p.lede{ margin: 22px 0 0; font-size: 19px; color: var(--muted); max-width: 46ch; }
+  .hero-ctas{ display:flex; align-items:center; gap: 18px; margin-top: 32px; flex-wrap: wrap; }
+  .btn-primary{
+    background: var(--pink); color:#fff; font-weight: 700; font-size: 16px;
+    padding: 16px 28px; border-radius: 999px; text-decoration:none; display:inline-block;
+    transition: transform .15s ease, box-shadow .2s ease;
+    box-shadow: 0 10px 30px -8px rgba(255,46,136,0.55);
+  }
+  .btn-primary:hover{ transform: translateY(-2px); }
+  .btn-ghost{
+    color: var(--ink); font-weight: 600; font-size: 15px; text-decoration:none;
+    border-bottom: 1px solid var(--line); padding-bottom: 2px;
+    transition: border-color .15s, color .15s;
+  }
+  .btn-ghost:hover{ border-color: var(--cyan); color: var(--cyan); }
+  .hero-note{ margin-top: 16px; font-size: 13px; color: var(--muted); }
+
+  .hero-visual{ position: relative; display:flex; justify-content:center; }
+  .wheel-decor{ position:absolute; width: 200px; top: -30px; right: 10px; opacity: 0.95; z-index: 1; }
+  .wheel-decor img{ width:100%; transform-origin: 50% 50%; }
+  .phone{
+    position: relative; width: 260px; border-radius: 34px; padding: 10px;
+    background: linear-gradient(160deg, #26262c, #101013);
+    box-shadow: 0 40px 80px -20px rgba(0,0,0,0.65), inset 0 0 0 1px rgba(255,255,255,0.04);
+    transform: rotate(3deg); z-index: 2;
+  }
+  .phone img{ border-radius: 24px; display:block; }
+  .chip{
+    position:absolute; background: var(--bg-raised-2); border:1px solid var(--line); border-radius: 16px;
+    padding: 10px 14px; font-size: 13px; font-weight: 600; display:flex; align-items:center; gap:8px;
+    box-shadow: 0 14px 30px -12px rgba(0,0,0,0.6); white-space: nowrap;
+  }
+  .chip.c1{ top: 8%; left: -6%; color: var(--lime); z-index:3; }
+  .chip.c2{ bottom: 14%; left: -12%; color: var(--cyan); z-index:3; }
+  .chip.c3{ bottom: -2%; right: -4%; color: var(--pink); z-index:3; }
+
+  @media (max-width: 900px){
+    .hero-grid{ grid-template-columns: 1fr; }
+    .hero-visual{ margin-top: 20px; }
+    .wheel-decor{ display:none; }
+    .chip{ display:none; }
+  }
+
+  section{ padding: 90px 0; }
+  .section-head{ max-width: 620px; margin-bottom: 48px; }
+  .section-head h2{ font-size: clamp(1.8rem, 3vw, 2.4rem); }
+  .section-head p{ color: var(--muted); font-size: 17px; margin-top: 14px; }
+
+  .problem{ background: var(--bg-raised); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+  .problem-grid{ display:grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items:center; }
+  .chat{ display:flex; flex-direction:column; gap: 10px; max-width: 380px; }
+  .bubble{ padding: 12px 16px; border-radius: 18px; font-size: 15px; width: fit-content; max-width: 82%; }
+  .bubble.them{ background: var(--bg-raised-2); border: 1px solid var(--line); border-bottom-left-radius: 4px; align-self: flex-start; }
+  .bubble.you{ background: var(--pink); color: #fff; border-bottom-right-radius: 4px; align-self: flex-end; }
+  .chat-caption{ margin-top: 18px; font-size: 13px; color: var(--muted); }
+  .problem-copy h2{ font-size: clamp(1.8rem, 3vw, 2.3rem); margin-bottom: 18px; }
+  .problem-copy p{ color: var(--muted); font-size: 17px; max-width: 46ch; }
+  .problem-copy p.punch{ color: var(--ink); font-weight: 600; font-size: 19px; margin-top: 18px; }
+
+  @media (max-width: 820px){
+    .problem-grid{ grid-template-columns: 1fr; gap: 36px; }
+    .problem-grid .chat{ order: 2; }
+  }
+
+  .features-list{ display:flex; flex-direction:column; gap: 4px; }
+  .feature-row{ display:grid; grid-template-columns: 64px 1fr auto; gap: 24px; align-items:center; padding: 26px 8px; border-top: 1px solid var(--line); }
+  .features-list .feature-row:last-child{ border-bottom: 1px solid var(--line); }
+  .feature-icon{ width: 56px; height: 56px; border-radius: 18px; display:flex; align-items:center; justify-content:center; font-size: 26px; }
+  .feature-row:nth-child(5n+1) .feature-icon{ background: rgba(255,46,136,0.14); }
+  .feature-row:nth-child(5n+2) .feature-icon{ background: rgba(215,242,5,0.14); }
+  .feature-row:nth-child(5n+3) .feature-icon{ background: rgba(0,229,255,0.14); }
+  .feature-row:nth-child(5n+4) .feature-icon{ background: rgba(255,46,136,0.14); }
+  .feature-row:nth-child(5n+5) .feature-icon{ background: rgba(215,242,5,0.14); }
+  .feature-text h3{ font-size: 19px; font-weight: 700; }
+  .feature-text p{ margin: 6px 0 0; color: var(--muted); font-size: 15px; max-width: 52ch; }
+  .feature-tag{ font-size: 12px; font-weight: 700; color: var(--muted); border: 1px solid var(--line); padding: 6px 12px; border-radius: 999px; white-space: nowrap; }
+  @media (max-width: 640px){
+    .feature-row{ grid-template-columns: 48px 1fr; }
+    .feature-tag{ display:none; }
+    .feature-icon{ width:44px; height:44px; border-radius:14px; font-size:20px; }
+  }
+
+  .how{ background: var(--bg-raised); border-top:1px solid var(--line); border-bottom:1px solid var(--line); }
+  .how-grid{ display:grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
+  .how-card{ background: var(--bg-raised-2); border: 1px solid var(--line); border-radius: var(--radius-lg); padding: 30px 26px; }
+  .how-num{
+    font-family:'Bricolage Grotesque', sans-serif; font-size: 15px; font-weight: 700; color: var(--bg);
+    background: var(--lime); width: 32px; height:32px; border-radius: 50%;
+    display:flex; align-items:center; justify-content:center; margin-bottom: 20px;
+  }
+  .how-card h3{ font-size: 20px; margin-bottom: 10px; }
+  .how-card p{ color: var(--muted); font-size: 15px; }
+  @media (max-width: 820px){ .how-grid{ grid-template-columns: 1fr; } }
+
+  .public-grid{ display:grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items:center; }
+  .public-copy h2{ font-size: clamp(1.7rem, 3vw, 2.2rem); }
+  .public-copy p{ color: var(--muted); font-size: 17px; margin-top: 16px; max-width: 48ch; }
+  .public-links{ display:flex; gap: 14px; margin-top: 26px; flex-wrap: wrap; }
+  .public-links a{
+    font-size: 14px; font-weight: 600; border: 1px solid var(--line); padding: 10px 18px;
+    border-radius: 999px; text-decoration: none; transition: border-color .15s, color .15s;
+  }
+  .public-links a:hover{ border-color: var(--cyan); color: var(--cyan); }
+  .public-card{ background: var(--bg-raised); border: 1px solid var(--line); border-radius: var(--radius-lg); padding: 30px; }
+  .public-card .who{ display:flex; align-items:center; gap: 12px; margin-bottom: 16px; }
+  .public-card .who img{ width: 40px; height:40px; border-radius: 30%; overflow:hidden; }
+  .public-card .who .name{ font-weight: 700; font-size: 15px; }
+  .public-card .who .role{ font-size: 13px; color: var(--muted); }
+  .public-card p{ font-size: 16px; color: var(--ink); line-height: 1.6; }
+  @media (max-width: 820px){ .public-grid{ grid-template-columns: 1fr; } }
+
+  .cta-final{
+    text-align:center;
+    background: radial-gradient(circle at 50% 0%, rgba(255,46,136,0.18), transparent 60%), var(--bg-raised);
+    border-top: 1px solid var(--line);
+  }
+  .cta-final h2{ font-size: clamp(2rem, 4vw, 2.8rem); max-width: 20ch; margin: 0 auto; }
+  .cta-final p{ color: var(--muted); font-size: 17px; margin: 18px auto 0; max-width: 46ch; }
+  .store-badges{ display:flex; justify-content:center; gap: 16px; margin-top: 34px; flex-wrap: wrap; }
+  .store-badge{
+    display:flex; align-items:center; gap: 10px; background: var(--bg); border: 1px solid var(--line);
+    color: var(--ink); padding: 13px 22px; border-radius: 14px; text-decoration:none; font-weight: 600;
+    font-size: 14px; transition: border-color .15s, transform .15s;
+  }
+  .store-badge:hover{ border-color: var(--lime); transform: translateY(-2px); }
+  .store-badge small{ display:block; color: var(--muted); font-weight:500; font-size: 11px; }
+
+  footer{ border-top: 1px solid var(--line); padding: 40px 0; }
+  .footer-grid{ display:flex; justify-content:space-between; align-items:center; flex-wrap: wrap; gap: 18px; }
+  .footer-grid img{ height: 22px; }
+  .footer-links{ display:flex; gap: 22px; list-style:none; padding:0; margin:0; font-size: 13px; color: var(--muted); }
+  .footer-links a{ text-decoration:none; }
+  .footer-links a:hover{ color: var(--ink); }
+  .footer-copy{ font-size: 13px; color: var(--muted); }
+</style>
+</head>
+<body>
+
+<header class="site">
+  <nav class="nav">
+    <a class="logo" href="#top"><img src="assets/wordmark.png" alt="JustPICK" /></a>
+    <ul class="nav-links">
+      <li><a href="#problem" data-i18n="nav.problem">The problem</a></li>
+      <li><a href="#features" data-i18n="nav.features">Features</a></li>
+      <li><a href="#how" data-i18n="nav.how">How it works</a></li>
+      <li><a href="#build" data-i18n="nav.build">Build in public</a></li>
+    </ul>
+    <div class="nav-right">
+      <button class="lang-toggle" id="langToggle" type="button" aria-label="Switch language">中文</button>
+      <a class="nav-cta" href="#join" data-i18n="nav.cta">Join the Beta</a>
+    </div>
+  </nav>
+</header>
+
+<main id="top">
+
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div class="hero-copy">
+        <span class="eyebrow-tag"><span class="dot"></span><span data-i18n="hero.eyebrow">Now in open beta</span></span>
+        <h1 data-i18n="hero.title">Nobody in your house has to decide <span>what's for dinner</span> again.</h1>
+        <p class="lede" data-i18n="hero.lede">JustPICK is the app that just picks. Tell it what's around, it hands you one real answer — a recipe or a restaurant. No scrolling, no group chat, no "idk, whatever."</p>
+        <div class="hero-ctas">
+          <a class="btn-primary" href="#join" data-i18n="hero.cta1">Join the Beta</a>
+          <a class="btn-ghost" href="#how" data-i18n="hero.cta2">See how it works</a>
+        </div>
+        <p class="hero-note" data-i18n="hero.note">Free during beta · iOS &amp; Android</p>
+      </div>
+
+      <div class="hero-visual">
+        <div class="wheel-decor" id="wheelDecor">
+          <img src="assets/wheel_icon.png" alt="" />
+        </div>
+        <div class="chip c1"><span data-i18n="hero.chip1">🍜 Cook at home</span></div>
+        <div class="chip c2"><span data-i18n="hero.chip2">📍 Eat out</span></div>
+        <div class="chip c3"><span data-i18n="hero.chip3">🎉 Feast mode</span></div>
+        <div class="phone">
+          <img src="assets/screenshot-home.jpg" alt="JustPICK app home screen with the Pick For Me button" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="problem" id="problem">
+    <div class="wrap problem-grid">
+      <div class="chat" aria-hidden="true">
+        <div class="bubble them" data-i18n="chat.1">What do you want for dinner?</div>
+        <div class="bubble you" data-i18n="chat.2">Anything.</div>
+        <div class="bubble them" data-i18n="chat.3">Anything is not a restaurant.</div>
+        <div class="bubble you" data-i18n="chat.4">idk, whatever you want</div>
+        <div class="bubble them" data-i18n="chat.5">We had that Tuesday.</div>
+        <p class="chat-caption" data-i18n="chat.caption">Repeats every night, in every kitchen.</p>
+      </div>
+      <div class="problem-copy">
+        <h2 data-i18n="problem.title">This isn't a food problem. It's a decision problem.</h2>
+        <p data-i18n="problem.body">There's nothing wrong with your fridge or the restaurants near you. The problem is making one more decision after a full day of making decisions.</p>
+        <p class="punch" data-i18n="problem.punch">JustPICK ends the conversation in one tap.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="features">
+    <div class="wrap">
+      <div class="section-head">
+        <h2 data-i18n="features.title">Five ways to stop deciding</h2>
+        <p data-i18n="features.sub">Every feature exists to remove a choice, not add one.</p>
+      </div>
+      <div class="features-list">
+        <div class="feature-row">
+          <div class="feature-icon">🍳</div>
+          <div class="feature-text">
+            <h3 data-i18n="feat.1.title">Cook at Home</h3>
+            <p data-i18n="feat.1.body">Tell it what's in your fridge and how much effort you've got left. It generates a real recipe you can actually make tonight.</p>
+          </div>
+          <div class="feature-tag" data-i18n="feat.1.tag">Core</div>
+        </div>
+        <div class="feature-row">
+          <div class="feature-icon">📍</div>
+          <div class="feature-text">
+            <h3 data-i18n="feat.2.title">Eat Out</h3>
+            <p data-i18n="feat.2.body">Nearby restaurants, matched to your mood and cravings — not a wall of stars and photos to scroll through.</p>
+          </div>
+          <div class="feature-tag" data-i18n="feat.2.tag">Core</div>
+        </div>
+        <div class="feature-row">
+          <div class="feature-icon" data-i18n="feat.3.icon">🎉</div>
+          <div class="feature-text">
+            <h3 data-i18n="feat.3.title">Feast Mode</h3>
+            <p data-i18n="feat.3.body">Hosting? Set the headcount and cuisine, and JustPICK builds the whole spread and does the portion math for you.</p>
+          </div>
+          <div class="feature-tag" data-i18n="feat.3.tag">Pro</div>
+        </div>
+        <div class="feature-row">
+          <div class="feature-icon">🎡</div>
+          <div class="feature-text">
+            <h3 data-i18n="feat.4.title">Indecisive Friends</h3>
+            <p data-i18n="feat.4.body">Can't agree with the group? Spin it. Whatever it lands on is dinner — no more group chat purgatory.</p>
+          </div>
+          <div class="feature-tag" data-i18n="feat.4.tag">Social</div>
+        </div>
+        <div class="feature-row">
+          <div class="feature-icon">🔥</div>
+          <div class="feature-text">
+            <h3 data-i18n="feat.5.title">Cooking Streak</h3>
+            <p data-i18n="feat.5.body">A simple photo check-in every time you actually cook, so you can watch the streak build instead of watching it break.</p>
+          </div>
+          <div class="feature-tag" data-i18n="feat.5.tag">Habit</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="how" id="how">
+    <div class="wrap">
+      <div class="section-head">
+        <h2 data-i18n="how.title">How it works</h2>
+        <p data-i18n="how.sub">Three steps, every time. No account setup marathon.</p>
+      </div>
+      <div class="how-grid">
+        <div class="how-card">
+          <div class="how-num">1</div>
+          <h3 data-i18n="how.1.title">Tell it the basics</h3>
+          <p data-i18n="how.1.body">What's around, how many people, how much time or patience you've got.</p>
+        </div>
+        <div class="how-card">
+          <div class="how-num">2</div>
+          <h3 data-i18n="how.2.title">It picks</h3>
+          <p data-i18n="how.2.body">One real recommendation — a recipe or a restaurant. Not a list to weigh up.</p>
+        </div>
+        <div class="how-card">
+          <div class="how-num">3</div>
+          <h3 data-i18n="how.3.title">You eat</h3>
+          <p data-i18n="how.3.body">Save it, cook it, order it. Streak keeps count so tomorrow's an easier yes.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="build">
+    <div class="wrap public-grid">
+      <div class="public-copy">
+        <h2 data-i18n="build.title">Built by one mom, in public, bugs included</h2>
+        <p data-i18n="build.body">No engineering background, no funding round — just a real "what's for dinner" problem and a lot of evenings spent learning to build software with AI. The wins, the broken buttons, and the redesigns all get posted, not just the polished parts.</p>
+        <div class="public-links">
+          <a href="https://www.instagram.com/getjustpick" target="_blank" rel="noopener">Instagram</a>
+          <a href="https://www.tiktok.com/@getjustpick" target="_blank" rel="noopener">TikTok</a>
+          <a href="https://www.threads.net/@getjustpick" target="_blank" rel="noopener">Threads</a>
+        </div>
+      </div>
+      <div class="public-card">
+        <div class="who">
+          <img src="assets/icon.png" alt="" />
+          <div>
+            <div class="name">Building JustPICK</div>
+            <div class="role" data-i18n="build.card.role">Season 1 — beta</div>
+          </div>
+        </div>
+        <p data-i18n="build.card.quote">"The goal isn't 100 beta users by next month. It's a product real families actually keep using — even if that takes longer to get right."</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta-final" id="join">
+    <div class="wrap">
+      <h2 data-i18n="cta.title">Stop deciding. Start eating.</h2>
+      <p data-i18n="cta.body">JustPICK is free to use during the beta on iOS and Android. Get in now while every feature is unlocked.</p>
+      <div class="store-badges">
+        <a class="store-badge" href="#" target="_blank" rel="noopener">
+          <span aria-hidden="true">🍎</span>
+          <span><small data-i18n="cta.betaon">Beta on</small>TestFlight (iOS)</span>
+        </a>
+        <a class="store-badge" href="#" target="_blank" rel="noopener">
+          <span aria-hidden="true">▶️</span>
+          <span><small data-i18n="cta.betaon2">Beta on</small>Google Play</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap footer-grid">
+    <img src="assets/wordmark.png" alt="JustPICK" />
+    <ul class="footer-links">
+      <li><a href="#" id="privacyLink" target="_blank" rel="noopener" data-i18n="footer.privacy">Privacy Policy</a></li>
+      <li><a href="#" id="termsLink" target="_blank" rel="noopener" data-i18n="footer.terms">Terms of Service</a></li>
+      <li><a href="mailto:legal@getjustpick.app" data-i18n="footer.contact">Contact</a></li>
+    </ul>
+    <div class="footer-copy" data-i18n="footer.copy">© 2026 JustPICK. Made in Canada 🇨🇦</div>
+  </div>
+</footer>
+
+<script>
+  var LEGAL_URLS = {
+    en: {
+      privacy: "privacy.html",
+      terms: "terms.html"
+    },
+    "zh-Hant": {
+      privacy: "privacy-zh.html",
+      terms: "terms-zh.html"
+    }
+  };
+
+  var translations = {
+    en: {
+      "nav.problem": "The problem",
+      "nav.features": "Features",
+      "nav.how": "How it works",
+      "nav.build": "Build in public",
+      "nav.cta": "Join the Beta",
+      "hero.eyebrow": "Now in open beta",
+      "hero.title": "Nobody in your house has to decide <span>what's for dinner</span> again.",
+      "hero.lede": "JustPICK is the app that just picks. Tell it what's around, it hands you one real answer — a recipe or a restaurant. No scrolling, no group chat, no \u201cidk, whatever.\u201d",
+      "hero.cta1": "Join the Beta",
+      "hero.cta2": "See how it works",
+      "hero.note": "Free during beta · iOS &amp; Android",
+      "hero.chip1": "🍜 Cook at home",
+      "hero.chip2": "📍 Eat out",
+      "hero.chip3": "🎉 Feast mode",
+      "chat.1": "What do you want for dinner?",
+      "chat.2": "Anything.",
+      "chat.3": "Anything is not a restaurant.",
+      "chat.4": "idk, whatever you want",
+      "chat.5": "We had that Tuesday.",
+      "chat.caption": "Repeats every night, in every kitchen.",
+      "problem.title": "This isn't a food problem. It's a decision problem.",
+      "problem.body": "There's nothing wrong with your fridge or the restaurants near you. The problem is making one more decision after a full day of making decisions.",
+      "problem.punch": "JustPICK ends the conversation in one tap.",
+      "features.title": "Five ways to stop deciding",
+      "features.sub": "Every feature exists to remove a choice, not add one.",
+      "feat.1.title": "Cook at Home",
+      "feat.1.body": "Tell it what's in your fridge and how much effort you've got left. It generates a real recipe you can actually make tonight.",
+      "feat.1.tag": "Core",
+      "feat.2.title": "Eat Out",
+      "feat.2.body": "Nearby restaurants, matched to your mood and cravings — not a wall of stars and photos to scroll through.",
+      "feat.2.tag": "Core",
+      "feat.3.icon": "🎉",
+      "feat.3.title": "Feast Mode",
+      "feat.3.body": "Hosting? Set the headcount and cuisine, and JustPICK builds the whole spread and does the portion math for you.",
+      "feat.3.tag": "Pro",
+      "feat.4.title": "Indecisive Friends",
+      "feat.4.body": "Can't agree with the group? Spin it. Whatever it lands on is dinner — no more group chat purgatory.",
+      "feat.4.tag": "Social",
+      "feat.5.title": "Cooking Streak",
+      "feat.5.body": "A simple photo check-in every time you actually cook, so you can watch the streak build instead of watching it break.",
+      "feat.5.tag": "Habit",
+      "how.title": "How it works",
+      "how.sub": "Three steps, every time. No account setup marathon.",
+      "how.1.title": "Tell it the basics",
+      "how.1.body": "What's around, how many people, how much time or patience you've got.",
+      "how.2.title": "It picks",
+      "how.2.body": "One real recommendation — a recipe or a restaurant. Not a list to weigh up.",
+      "how.3.title": "You eat",
+      "how.3.body": "Save it, cook it, order it. Streak keeps count so tomorrow's an easier yes.",
+      "build.title": "Built by one mom, in public, bugs included",
+      "build.body": "No engineering background, no funding round — just a real \u201cwhat's for dinner\u201d problem and a lot of evenings spent learning to build software with AI. The wins, the broken buttons, and the redesigns all get posted, not just the polished parts.",
+      "build.card.role": "Season 1 — beta",
+      "build.card.quote": "\u201cThe goal isn't 100 beta users by next month. It's a product real families actually keep using — even if that takes longer to get right.\u201d",
+      "cta.title": "Stop deciding. Start eating.",
+      "cta.body": "JustPICK is free to use during the beta on iOS and Android. Get in now while every feature is unlocked.",
+      "cta.betaon": "Beta on",
+      "cta.betaon2": "Beta on",
+      "footer.privacy": "Privacy Policy",
+      "footer.terms": "Terms of Service",
+      "footer.contact": "Contact",
+      "footer.copy": "© 2026 JustPICK. Made in Canada 🇨🇦"
+    },
+    "zh-Hant": {
+      "nav.problem": "問題",
+      "nav.features": "功能",
+      "nav.how": "點樣用",
+      "nav.build": "公開日記",
+      "nav.cta": "即刻加入 Beta",
+      "hero.eyebrow": "而家 Open Beta 緊",
+      "hero.title": "屋企唔使再有人諗<span>今晚食咩</span>。",
+      "hero.lede": "JustPICK 係一個淨係識「話事」嘅 app。話俾佢知你有咩，佢即刻俾你一個實際答案 — 一個食譜或者一間餐廳。唔使篤到手軟，唔使開 group chat，唔使「唔知喎，隨便」。",
+      "hero.cta1": "即刻加入 Beta",
+      "hero.cta2": "睇下點運作",
+      "hero.note": "Beta 期間免費 · iOS 同 Android",
+      "hero.chip1": "🍜 喺屋企煮",
+      "hero.chip2": "📍 出街食",
+      "hero.chip3": "🎉 九大簋",
+      "chat.1": "今晚食咩？",
+      "chat.2": "隨便。",
+      "chat.3": "隨便唔係一間餐廳。",
+      "chat.4": "唔知喎，你話啦",
+      "chat.5": "呢個我哋星期二先食過。",
+      "chat.caption": "呢個對話，每晚都喺唔同廚房上演。",
+      "problem.title": "唔係食嘢有問題，係要諗先係問題。",
+      "problem.body": "你部雪櫃冇問題，附近間餐廳都冇問題。問題係捱咗成日，仲要諗多一個決定。",
+      "problem.punch": "JustPICK 一 tap，幫你完咗呢個對話。",
+      "features.title": "五個唔使再諗嘅方法",
+      "features.sub": "每個功能都係幫你減少一個決定，唔係加多一個。",
+      "feat.1.title": "喺屋企煮",
+      "feat.1.body": "話俾佢知雪櫃有咩、仲有幾多心機，佢即刻俾你一個今晚做得到嘅食譜。",
+      "feat.1.tag": "核心",
+      "feat.2.title": "出街食",
+      "feat.2.body": "附近餐廳，跟你個 mood 同想食嘅嘢配對 — 唔使一張張相咁篤落去揀。",
+      "feat.2.tag": "核心",
+      "feat.3.icon": "九",
+      "feat.3.title": "九大簋",
+      "feat.3.body": "請客？揀人數同菜系，JustPICK 幫你砌埋成餐菜，仲計埋分量。",
+      "feat.3.tag": "進階",
+      "feat.4.title": "猶豫友仔",
+      "feat.4.body": "班友夾唔埋？轉個掣。轉到邊樣就食邊樣 — 唔使再喺 group chat 度拗。",
+      "feat.4.tag": "社交",
+      "feat.5.title": "落廚連續紀錄",
+      "feat.5.body": "每次真係落咗廚，影張相 check-in，睇住條連續紀錄愈嚟愈長。",
+      "feat.5.tag": "習慣",
+      "how.title": "點樣用",
+      "how.sub": "三步，次次一樣，唔使畀你填一大堆資料。",
+      "how.1.title": "話俾佢知基本資料",
+      "how.1.body": "屋企有咩、幾多人食、有幾多時間定心機。",
+      "how.2.title": "佢話事",
+      "how.2.body": "俾你一個實際建議 — 一個食譜或者一間餐廳，唔係一張要你自己揀嘅清單。",
+      "how.3.title": "你食",
+      "how.3.body": "儲返嚟、煮咗佢、叫咗佢。連續紀錄幫你記住，聽日再嚟又易啲揀。",
+      "build.title": "一個媽咪、冇寫過 code，照樣公開晒成個過程",
+      "build.body": "冇讀過 engineering，都冇拎過投資 — 淨係有個真實嘅「今晚食咩」問題，同埋一堆用 AI 學識寫程式嘅晚上。贏咗嘅、撞爛咗嘅掣、重新設計嘅位，全部都會出街，唔淨係得靚嘅果部分。",
+      "build.card.role": "第一季 — Beta",
+      "build.card.quote": "「目標唔係下個月要有 100 個 beta 用戶，係整一個屋企真係會一直用嘅產品 — 就算要耐啲先做啱都得。」",
+      "cta.title": "唔使再諗，食就得。",
+      "cta.body": "Beta 期間 iOS 同 Android 都免費用。而家入嚟，功能仲全部解鎖緊。",
+      "cta.betaon": "Beta 版",
+      "cta.betaon2": "Beta 版",
+      "footer.privacy": "私隱政策",
+      "footer.terms": "使用條款",
+      "footer.contact": "聯絡我們",
+      "footer.copy": "© 2026 JustPICK ・喺加拿大製作 🇨🇦"
+    }
+  };
+
+  var STORAGE_KEY = "justpick-lang";
+
+  function applyLang(lang){
+    var dict = translations[lang];
+    document.querySelectorAll("[data-i18n]").forEach(function(el){
+      var key = el.getAttribute("data-i18n");
+      if(dict[key] !== undefined){ el.innerHTML = dict[key]; }
+    });
+    document.getElementById("htmlRoot").setAttribute("lang", lang === "zh-Hant" ? "zh-Hant" : "en");
+    document.getElementById("langToggle").textContent = lang === "zh-Hant" ? "EN" : "中文";
+    var legal = LEGAL_URLS[lang] || LEGAL_URLS.en;
+    document.getElementById("privacyLink").setAttribute("href", legal.privacy);
+    document.getElementById("termsLink").setAttribute("href", legal.terms);
+    try{ localStorage.setItem(STORAGE_KEY, lang); }catch(e){}
+  }
+
+  function currentLang(){
+    var saved = null;
+    try{ saved = localStorage.getItem(STORAGE_KEY); }catch(e){}
+    return saved === "zh-Hant" ? "zh-Hant" : "en";
+  }
+
+  document.getElementById("langToggle").addEventListener("click", function(){
+    var next = currentLang() === "zh-Hant" ? "en" : "zh-Hant";
+    applyLang(next);
+  });
+
+  applyLang(currentLang());
+
+  // Single orchestrated hero moment: the wheel spins in and settles once.
+  (function(){
+    var wheel = document.querySelector('#wheelDecor img');
+    if(!wheel) return;
+    var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if(reduced) return;
+    wheel.style.transition = 'transform 1.4s cubic-bezier(.16,1,.3,1)';
+    wheel.style.transform = 'rotate(0deg)';
+    requestAnimationFrame(function(){
+      setTimeout(function(){
+        wheel.style.transform = 'rotate(376deg)';
+      }, 150);
+    });
+  })();
+</script>
+
+</body>
+</html>
