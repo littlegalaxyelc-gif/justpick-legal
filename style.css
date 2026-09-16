@@ -25,7 +25,8 @@ header.top{
   max-width: 760px; margin:0 auto; padding: 20px 24px;
   display:flex; align-items:center; justify-content:space-between;
 }
-.logo{ font-family:'Bricolage Grotesque','Inter',sans-serif; font-weight:800; font-size:20px; text-decoration:none; }
+.logo{ font-family:'Bricolage Grotesque','Inter',sans-serif; font-weight:800; font-size:20px; text-decoration:none; display:inline-flex; align-items:center; }
+.logo img{ height: 24px; width:auto; }
 .logo .p{ color: var(--pink); }
 .logo .l{ color: var(--lime); }
 .top-actions{ display:flex; align-items:center; gap:14px; }
